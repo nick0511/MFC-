@@ -1,0 +1,35 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: storage_manage - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\Users\admin\AppData\Local\Temp\RSP42C7.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/storage_manage.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Users\admin\Desktop\OT\t1\test1\storage_mfc\storage_manage\storage_manageDlg.cpp"
+]
+Creating command line "cl.exe @C:\Users\admin\AppData\Local\Temp\RSP42C7.tmp" 
+Creating temporary file "C:\Users\admin\AppData\Local\Temp\RSP42C8.tmp" with contents
+[
+/nologo /subsystem:windows /incremental:yes /pdb:"Debug/storage_manage.pdb" /debug /machine:I386 /out:"Debug/storage_manage.exe" /pdbtype:sept 
+.\Debug\StdAfx.obj
+.\Debug\storage_manage.obj
+.\Debug\storage_manageDlg.obj
+.\Debug\storage_manage.res
+]
+Creating command line "link.exe @C:\Users\admin\AppData\Local\Temp\RSP42C8.tmp"
+<h3>Output Window</h3>
+Compiling...
+storage_manageDlg.cpp
+Linking...
+
+
+
+<h3>Results</h3>
+storage_manage.exe - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
