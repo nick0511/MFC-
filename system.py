@@ -5,11 +5,22 @@ import tkinter as tk
 
 window = tk.Tk()
 window.title("test")
-window.geometry('900x500')
+window.geometry('200x200')
 
 
 #时间片轮转
 def RR():
+    window = tk.Tk()
+    window.title("时间片轮转")
+    window.geometry('900x500')
+    w=tk.Tk()
+    w.title("初始进程情况")
+    w.geometry('400x300')
+    tk.Label(w, text='作业状态', ).place(x=20, y=30)
+    tk.Label(w, text='作业名', ).place(x=100, y=30)
+    tk.Label(w, text='作业长度', ).place(x=180, y=30)
+
+
     tk.Label(window, text='作业状态', ).place(x=20, y=30)
     tk.Label(window, text='作业名', ).place(x=100, y=30)
     tk.Label(window, text='作业长度', ).place(x=180, y=30)
@@ -33,6 +44,11 @@ def RR():
         bfb.append(tmp_string)
 
     for y in range(10):
+
+        tk.Label(w, text=job_length[y], ).place(x=180, y=location)  # 作业长度
+        tk.Label(w, text=job_name[y], ).place(x=100, y=location)  # 作业名
+        tk.Label(w, text=job_status[y], ).place(x=30, y=location)  # 作业状态
+
         tk.Label(window, text=job_length[y], ).place(x=180, y=location)  # 作业长度
         tk.Label(window, text=job_name[y], ).place(x=100, y=location)  # 作业名
         tk.Label(window, text=job_status[y], ).place(x=30, y=location)  # 作业状态
@@ -70,6 +86,17 @@ def RR():
               # 控制进度条流动的速度
 
 def dynamic():
+    w = tk.Tk()
+    w.title("初始进程状态")
+    w.geometry('400x300')
+
+    window = tk.Tk()
+    window.title("动态优先权算法")
+    window.geometry('900x500')
+    tk.Label(w, text='作业状态', ).place(x=20, y=30)
+    tk.Label(w, text='作业名', ).place(x=100, y=30)
+    tk.Label(w, text='作业长度', ).place(x=180, y=30)
+    tk.Label(w, text='作业优先级', ).place(x=240, y=30)
     tk.Label(window, text='作业状态', ).place(x=20, y=30)
     tk.Label(window, text='作业名', ).place(x=100, y=30)
     tk.Label(window, text='作业长度', ).place(x=180, y=30)
@@ -84,8 +111,8 @@ def dynamic():
     job_length = [5, 3, 2, 11, 43, 22, 55, 44, 77, 44]  # job需要时间片长度
     job_used_time = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # job的已用时间
     job_status = ['就绪', '就绪', '就绪', '就绪', '就绪', '就绪', '就绪', '就绪', '就绪', '就绪']  # job的状态
-    job_priority = [10, 20, 2, 3, 1, 15, 2, 3, 2, 4]
-    real_priority= [10, 20, 2, 3, 1, 15, 2, 3, 2, 4]
+    job_priority = [-10, 19, -2, 3, 1, 15, 2, 3, 2, 4]
+    real_priority= [-10, 19, -2, 3, 1, 15, 2, 3, 2, 4]
     a = []  # 存进度条的对象列表
     lb = []  # 存label的对象列表，是完成率的label
     lb_priority=[]  # 存label的对象列表，是优先级的label
@@ -99,6 +126,10 @@ def dynamic():
         tk.Label(window, text=job_length[y], ).place(x=180, y=location)  # 作业长度
         tk.Label(window, text=job_name[y], ).place(x=100, y=location)  # 作业名
         tk.Label(window, text=job_status[y], ).place(x=30, y=location)  # 作业状态
+        tk.Label(w, text=job_length[y], ).place(x=180, y=location)  # 作业长度
+        tk.Label(w, text=job_name[y], ).place(x=100, y=location)  # 作业名
+        tk.Label(w, text=job_status[y], ).place(x=30, y=location)  # 作业状态
+        tk.Label(w, text=job_priority[y], ).place(x=250, y=location)  # 作业状态
         lb_p = tk.Label(window, text=job_priority[y])
         lb_priority.append(lb_p)
         lb_p.place_configure(x=250,y=location)
@@ -116,9 +147,10 @@ def dynamic():
     for i in range(1000):
         i=i%10;
         real_priority.sort()
+        real_priority.reverse()
         if job_used_time[i]>=job_length[i]: #时间片够了的进程就跳过下面的操作
             continue
-        if job_priority[i]<real_priority[-1]:
+        if job_priority[i]>real_priority[-1]:
             continue
 
         fill_line = a[i].create_rectangle(1.5, 1.5, 0, 23, width=0, fill="green")
@@ -126,8 +158,9 @@ def dynamic():
         a[i].coords(fill_line, (0, 0, n[i], 60))
         job_status[i]='运行'                      #更改运行进程的状态
         job_used_time[i]+=1
-        job_priority[i]-=1
-        real_priority[-1]-=1
+        if job_priority[i]<20:
+            job_priority[i]+=1                      #每次调度完成优先级变化
+            real_priority[-1]+=1
         location = 60                             #更新页面
         for y in range(10):
             bfb[y]=str(round(job_used_time[y] / job_length[y]*100,2)) + '%'
@@ -139,18 +172,32 @@ def dynamic():
         window.update()
         if job_used_time[i]>=job_length[i]:
             job_status[i] = '完成'
-            real_priority.pop(-1)
+            real_priority.pop()
         else:
             job_status[i] = '就绪'                    #完成后状态修改
         time.sleep(0.2)
           # 控制进度条流动的速度
 
 def HRRN():
+    w = tk.Tk()
+    w.title("初始进程状态")
+    w.geometry('400x300')
+
+    window = tk.Tk()
+    window.title("动态优先权算法")
+    window.geometry('900x500')
     alltime=0
+
+    tk.Label(w, text='作业状态', ).place(x=20, y=30)
+    tk.Label(w, text='作业名', ).place(x=100, y=30)
+    tk.Label(w, text='作业长度', ).place(x=180, y=30)
+    tk.Label(w, text='作业响应比', ).place(x=240, y=30)
+    tk.Label(w, text='作业到达时间', ).place(x=320, y=30)
+
     tk.Label(window, text='作业状态', ).place(x=20, y=30)
     tk.Label(window, text='作业名', ).place(x=100, y=30)
     tk.Label(window, text='作业长度', ).place(x=180, y=30)
-    tk.Label(window, text='作业相应比', ).place(x=240, y=30)
+    tk.Label(window, text='作业响应比', ).place(x=240, y=30)
     tk.Label(window, text='调度', ).place(x=400, y=30)
     tk.Label(window, text='完成率', ).place(x=800, y=30)
     # 初始化图形界面
@@ -179,6 +226,9 @@ def HRRN():
         bfb.append(tmp_string)
 
     for y in range(10):
+
+
+
         tk.Label(window, text=job_length[y], ).place(x=180, y=location)  # 作业长度
         tk.Label(window, text=job_name[y], ).place(x=100, y=location)  # 作业名
         tk.Label(window, text=job_status[y], ).place(x=30, y=location)  # 作业状态
@@ -192,7 +242,14 @@ def HRRN():
         canvas = tk.Canvas(window, width=450, height=22, bg="white")
         canvas.place(x=300, y=location)  # 进度条
         a.append(canvas)
+
+        tk.Label(w, text=job_cometime[y]).place(x=340, y=location)
+        tk.Label(w, text=tmp).place(x=250,y=location)
+        tk.Label(w, text=job_length[y], ).place(x=180, y=location)
+        tk.Label(w, text=job_name[y], ).place(x=100, y=location)
+        tk.Label(w, text=job_status[y], ).place(x=30, y=location)
         location += 30  # 位置参数+30
+
 
     # 初始化数据
 
@@ -202,12 +259,13 @@ def HRRN():
         if(len(real_xyb)==0):
             break
         real_xyb = []
-        job_xyb  = []
+
         i=i%10
         flag = 0
-        #更新相应比
+        #更新响应比
         for j in range(len(job_name)):
-            job_xyb.append((job_cometime[j] + job_length[j]+alltime) / job_length[j])
+            if job_used_time[j] < job_length[j]:
+                job_xyb[j]=((job_cometime[j] + job_length[j]+alltime) / job_length[j])
 
         for j in range(len(job_name)):
             if job_used_time[j]<job_length[j]:
@@ -215,7 +273,6 @@ def HRRN():
 
         real_xyb.sort()
 
-        print(len(real_xyb))
         if job_used_time[i]>=job_length[i]: #时间片够了的进程就跳过下面的操作
             continue
         if job_xyb[i]!=real_xyb[-1]:
@@ -251,7 +308,7 @@ def HRRN():
 if __name__=='__main__':
     #调用RR
 
-    tk.Button(window, text="RR", command=RR, padx=12, pady=3).place(x=260, y=450)
-    tk.Button(window, text="Dynamic", command=dynamic, padx=12, pady=3).place(x=380, y=450)
-    tk.Button(window, text="HRRN", command=HRRN, padx=12, pady=3).place(x=550, y=450)
+    tk.Button(window, text="RR", command=RR, padx=12, pady=3).place(x=40, y=20)
+    tk.Button(window, text="Dynamic", command=dynamic, padx=12, pady=3).place(x=40, y=70)
+    tk.Button(window, text="HRRN", command=HRRN, padx=12, pady=3).place(x=40, y=120)
     window.mainloop()
