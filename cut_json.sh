@@ -5,13 +5,13 @@ function DT0109()
 log=$1
 file=$2
 #获取log_dt文件，保存字段
-	 awk -F'DATA-TBS-0109;' '{print $2}'  $log|awk -F'":' '{for(i=1;i<NF;i++){if($i ~/,/){split($i,arr,",");print arr[2],NR}}}'|tr -s '\n'>log_dt
-	awk -F'DATA-TBS-0109;' '{print $2}'  $log|awk -F'":' '{for(i=1;i<NF;i++){if($i ~/,/){split($i,arr,",");print arr[3],NR}}}'|tr -s '\n'|grep '.[[:space:]][0-9]'>>log_dt
+var=$3
+	 awk   'BEGIN{FS="'$var'"}{print $2}'  $log|awk -F'":' '{for(i=1;i<NF;i++){if($i ~/,/){split($i,arr,",");print arr[2],NR}}}'|tr -s '\n'>log_dt
+	 awk   'BEGIN{FS="'$var'"}{print $2}'  $log|awk -F'":' '{for(i=1;i<NF;i++){if($i ~/,/){split($i,arr,",");print arr[3],NR}}}'|tr -s '\n'|grep '.[[:space:]][0-9]'>>log_dt
 
 #获取生产日志的格式文件
- 	grep 'DATA-TBS-0109;' $file|awk -F'DATA-TBS-0109;' '{print $2}'|awk -F'":' '{for(i=1;i<NF;i++){if($i ~/,/){split($i,arr,",");print arr[2],NR}}}'|tr -s '\n'>0109file
-
- 	grep 'DATA-TBS-0109;' $file|awk -F'DATA-TBS-0109;' '{print $2}'|awk -F'":' '{for(i=1;i<NF;i++){if($i ~/,/){split($i,arr,",");print arr[3],NR}}}'|tr -s '\n'|grep '.[[:space:]][0-9]'>>0109file
+ 	grep $var $file|awk 'BEGIN{FS="'$var'"}{print $2}'|awk -F'":' '{for(i=1;i<NF;i++){if($i ~/,/){split($i,arr,",");print arr[2],NR}}}'|tr -s '\n'>0109file
+ 	grep $var $file|awk 'BEGIN{FS="'$var'"}{print $2}'|awk -F'":' '{for(i=1;i<NF;i++){if($i ~/,/){split($i,arr,",");print arr[3],NR}}}'|tr -s '\n'|grep '.[[:space:]][0-9]'>>0109file
 #获取格式文件种数
 file_num=`awk -F' '  '{print $2}' 0109file|uniq`
 log_num=`awk -F' '  '{print $2}' log_dt|uniq`
@@ -33,13 +33,13 @@ do
 
 	if [[ $flag -eq 0 ]]
 	then
-		echo $line_num
+		echo $line_num>>$var"_log"
 	else
-		echo success
+		echo success >>$var"_log"
 	fi
 done
 
 
 }
 
-DT0109 $1 $2
+DT0109 $1 $2 'DATA-TBS-0115;'
