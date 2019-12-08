@@ -21,6 +21,7 @@ max=[[7,5,3],[3,3,2],[9,0,2],[2,2,2],[4,3,3]]#第i个进程第j种资源最大�
 allocation=[[0,1,0],[2,0,0],[3,0,2],[2,1,1],[0,0,2]]#第i个进程第j种资源已经分配的量
 need=[[7,4,3],[1,2,2],[6,0,0],[0,1,1],[4,3,1]]#第i个进程第j种资源还需要的量
 finish=[0,0,0,0,0]
+result_list=[]
 the_queue=[]
 
 #静态标签初始化
@@ -68,6 +69,9 @@ tk.Label(window,text=resource_name).place(x=150,y=80)
 tk.Label(window,text=resource_name).place(x=280,y=80)
 tk.Label(window,text=resource_name).place(x=420,y=80)
 tk.Label(window,text=resource_name).place(x=520,y=80)
+
+
+
 y_location=120
 
 avtk=tk.Label(window, text=available, )
@@ -134,15 +138,46 @@ def check():
                 if (need[j])[k] <= available[k]:
                     count += 1
             if count == 3:
+                tmp = available.copy()
+                result_list.append(tmp)
                 finish[j] = 1
                 the_queue.append(j)
                 for i in range(len(available)):
                     available[i] += max[j][i]
 
+
     if len(the_queue) < 5:
         tk.messagebox.showinfo('提示', '系统是不安全的')
     else:
-        tk.messagebox.showinfo('提示', "系统在t0时刻存在安全序列" + str(the_queue) + "，系统是安全的")
+        w=tk.Tk()
+        w.geometry('700x300')
+        tk.Label(w,text="系统在t0时刻存在安全序列" + str(the_queue) + "，系统是安全的").place(x=100,y=20)
+        tk.Label(w,text="Free").place(x=120,y=50)
+        tk.Label(w,text="Need").place(x=220,y=50)
+        tk.Label(w,text="Allocation").place(x=320,y=50)
+        tk.Label(w,text="Free+Allocation").place(x=420,y=50)
+        tk.Label(w,text="Finish").place(x=500,y=50)
+
+        tk.Label(w, text=resource_name).place(x=120, y=80)
+        tk.Label(w, text=resource_name).place(x=220, y=80)
+        tk.Label(w, text=resource_name).place(x=320, y=80)
+        tk.Label(w, text=resource_name).place(x=420, y=80)
+
+        y_location=100
+        count = 0
+        for i in the_queue:
+
+            tk.Label(w,text="p"+str(i)).place(x=30,y=y_location)
+            tk.Label(w,text=result_list[count]).place(x=120,y=y_location)
+            tk.Label(w,text=need[i]).place(x=220,y=y_location)
+            tk.Label(w,text=allocation[i]).place(x=320,y=y_location)
+            tmp=[]
+            for j in range(len(available)):
+                tmp.append(allocation[i][j]+result_list[count][j])
+            tk.Label(w, text=tmp).place(x=420, y=y_location)
+            tk.Label(w, text='True'if finish[i]==1 else 'False').place(x=500, y=y_location)
+            y_location+=40
+            count +=1
     init_that()
 #初始化面板
 def init_that():
@@ -152,7 +187,9 @@ def init_that():
     global need
     global finish
     global the_queue
+    global result_list
 
+    result_list=[]
     available = [3, 3, 2]  # m种资源，每种资源可用数目
     max = [[7, 5, 3], [3, 3, 2], [9, 0, 2], [2, 2, 2], [4, 3, 3]]  # 第i个进程第j种资源最大需求量
     allocation = [[0, 1, 0], [2, 0, 0], [3, 0, 2], [2, 1, 1], [0, 0, 2]]  # 第i个进程第j种资源已经分配的量
