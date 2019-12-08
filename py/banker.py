@@ -165,15 +165,17 @@ def check():
 
         y_location=100
         count = 0
+
         for i in the_queue:
 
             tk.Label(w,text="p"+str(i)).place(x=30,y=y_location)
             tk.Label(w,text=result_list[count]).place(x=120,y=y_location)
             tk.Label(w,text=need[i]).place(x=220,y=y_location)
             tk.Label(w,text=allocation[i]).place(x=320,y=y_location)
-            tmp=[]
-            for j in range(len(available)):
-                tmp.append(allocation[i][j]+result_list[count][j])
+            if i != the_queue[-1]:
+                tmp=result_list[count+1]
+            else:
+                tmp=available
             tk.Label(w, text=tmp).place(x=420, y=y_location)
             tk.Label(w, text='True'if finish[i]==1 else 'False').place(x=500, y=y_location)
             y_location+=40
