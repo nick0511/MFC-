@@ -17,7 +17,7 @@ need_tk=[]
 #数据初始化
 resource_name=['A','B','C']
 available=[3,3,2]#m种资源，每种资源可用数目
-max=[[7,5,3],[3,3,2],[9,0,2],[2,2,2],[4,3,3]]#第i个进程第j种资源最大需求量
+max=[[7,5,3],[3,2,2],[9,0,2],[2,2,2],[4,3,3]]#第i个进程第j种资源最大需求量
 allocation=[[0,1,0],[2,0,0],[3,0,2],[2,1,1],[0,0,2]]#第i个进程第j种资源已经分配的量
 need=[[7,4,3],[1,2,2],[6,0,0],[0,1,1],[4,3,1]]#第i个进程第j种资源还需要的量
 finish=[0,0,0,0,0]
@@ -156,7 +156,7 @@ def check():
         tk.Label(w,text="Need").place(x=220,y=50)
         tk.Label(w,text="Allocation").place(x=320,y=50)
         tk.Label(w,text="Free+Allocation").place(x=420,y=50)
-        tk.Label(w,text="Finish").place(x=500,y=50)
+        tk.Label(w,text="Finish").place(x=530,y=50)
 
         tk.Label(w, text=resource_name).place(x=120, y=80)
         tk.Label(w, text=resource_name).place(x=220, y=80)
@@ -165,19 +165,18 @@ def check():
 
         y_location=100
         count = 0
-
+        tmp = result_list[0]
         for i in the_queue:
 
             tk.Label(w,text="p"+str(i)).place(x=30,y=y_location)
-            tk.Label(w,text=result_list[count]).place(x=120,y=y_location)
+            tk.Label(w,text=tmp).place(x=120,y=y_location)
             tk.Label(w,text=need[i]).place(x=220,y=y_location)
             tk.Label(w,text=allocation[i]).place(x=320,y=y_location)
-            if i != the_queue[-1]:
-                tmp=result_list[count+1]
-            else:
-                tmp=available
+
+            for j in range(len(available)):
+                tmp[j]=tmp[j]+allocation[i][j]
             tk.Label(w, text=tmp).place(x=420, y=y_location)
-            tk.Label(w, text='True'if finish[i]==1 else 'False').place(x=500, y=y_location)
+            tk.Label(w, text='True'if finish[i]==1 else 'False').place(x=530, y=y_location)
             y_location+=40
             count +=1
     init_that()
@@ -193,7 +192,7 @@ def init_that():
 
     result_list=[]
     available = [3, 3, 2]  # m种资源，每种资源可用数目
-    max = [[7, 5, 3], [3, 3, 2], [9, 0, 2], [2, 2, 2], [4, 3, 3]]  # 第i个进程第j种资源最大需求量
+    max = [[7, 5, 3], [3, 2, 2], [9, 0, 2], [2, 2, 2], [4, 3, 3]]  # 第i个进程第j种资源最大需求量
     allocation = [[0, 1, 0], [2, 0, 0], [3, 0, 2], [2, 1, 1], [0, 0, 2]]  # 第i个进程第j种资源已经分配的量
     need = [[7, 4, 3], [1, 2, 2], [6, 0, 0], [0, 1, 1], [4, 3, 1]]  # 第i个进程第j种资源还需要的量
     finish = [0, 0, 0, 0, 0]
